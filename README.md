@@ -1,4 +1,5 @@
 # JukaiNLP Web
+<p align="center"><img src="https://github.com/hshindo/jukainlp-web.jl/blob/master/jukainlp-web.png" width="200"></p>
 
 ## Setup
 ```
@@ -6,6 +7,7 @@ npm install -g npm
 npm install -g babel webpack webpack-dev-server
 ```
 
+Then, clone the repository.
 ```
 git clone https://github.com/hshindo/jukainlp-web.git
 ```
@@ -15,11 +17,11 @@ Install dependencies for `node_modules` listed in package.json.
 npm install
 ```
 
-To start demo,
+## Start
 ```
-$ npm start
+npm start
 ```
-Open your browser and listen to `localhost:7777` which is running by `webpack-dev-server`.
+Open your browser: `localhost:7777` provided by `webpack-dev-server`.
 
 ## Directory tree
 ```
