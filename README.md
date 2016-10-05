@@ -1,5 +1,5 @@
 # JukaiNLP Web
-<p align="center"><img src="https://github.com/hshindo/jukainlp-web.jl/blob/master/jukainlp-web.png" width="200"></p>
+<p align="center"><img src="https://github.com/hshindo/jukainlp-web/blob/master/jukainlp-web.png" width="200"></p>
 
 ## Setup
 ```
