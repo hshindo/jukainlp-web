@@ -9,6 +9,7 @@ import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
 import MenuLangPart from './MenuLangPart';
 import MenuAnalPart from './MenuAnalPart';
 import MenuTransPart from './MenuTransPart';
+import MenuBar from './MenuBar';
 
 const styles = {
     menuBar: {
@@ -38,15 +39,7 @@ class AppMenuBar extends React.Component {
                         anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
                         targetOrigin={{ horizontal: 'left', vertical: 'top' }}
                     >
-                        <MenuLangPart />
-
-                        <Divider />
-
-                        <MenuAnalPart />
-
-                        <Divider />
-
-                        <MenuTransPart />
+                        <MenuBar/>
                     </IconMenu>
                 }
                 iconElementRight={
