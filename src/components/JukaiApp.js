@@ -7,14 +7,12 @@ import AppMenuBar from './AppMenuBar';
 import Snackbar from 'material-ui/Snackbar';
 import StatusBar from './StatusBar';
 import LineText from './LineComponent';
-import io from 'socket.io-client'
 
 import brace from 'brace';
 import AceEditor from 'react-ace';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'brace/mode/markdown';
 import 'brace/theme/github';
-import lodash from 'lodash';
 
 injectTapEventPlugin();
 var ws = new WebSocket('ws://jukainlp.hshindo.com');
@@ -31,6 +29,11 @@ class Chunk {
     setNe(ne) {
         this.ne = ne;
     }
+
+    setBgColorNe(bgColor) {
+        this.bgColor = bgColor;
+    }
+
     setLink(link) {
         this.link = link;
     }
@@ -44,7 +47,8 @@ class Chunk {
             return {
                 ne: this.ne,
                 link: this.link,
-                words: this.words
+                words: this.words,
+                bgColor: this.bgColor
             }
         }
     }
@@ -68,6 +72,7 @@ class WordBuilder {
         var list = [];
         raw.forEach(function (item) {
             let newItem = new Chunk();
+            newItem.setBgColorNe(item.itemNe.bgColor);
             newItem.setNe(item.ne[0]);
             newItem.setLink(item.link[0]);
             if (item.link.length) {
@@ -94,16 +99,21 @@ class JukaiApp extends React.Component {
             let data = JSON.parse(msg.data);
 
             if(data['entity_types']) {
-                return data['entity_types'].forEach( type => { entityTypes[type.type] = type;});
+                return data['entity_types'].forEach( type => {
+                    entityTypes[type.type] = type;
+                });
             }
-
             if (data[0]) {
                 let words = data[0].map( word => {
                     word.metadata = entityTypes[word.cat];
+                    if(word.ne.length) {
+                        word.itemNe = entityTypes[word.ne[0]];
+                    }else {
+                        word.itemNe = {};
+                    }
                     return word;
                 });
                 let list = WordBuilder.build(words);
-                console.log(list);
                 this.setState({chuck : list});
             }
         });

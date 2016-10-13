@@ -15,7 +15,6 @@ export default class LineComponent extends React.Component {
     }
     render() {
         let text = this.props.text || [];
-        console.log(text);
         let renderWord = text.map((item, index) => {
             return (
                 <Word key={index} word={item}/>
@@ -23,9 +22,12 @@ export default class LineComponent extends React.Component {
         });
         return (
             <div>
-                <div style={{display: 'flex', alignItems: 'flex-end'}}>
-                    {renderWord}
+                <div className="col-sm-12">
+                    <div style={{display: 'flex', alignItems: 'flex-end'}}>
+                        {renderWord}
+                    </div>
                 </div>
+                <br/>
                 <div>
                     {this.props.enText}
                 </div>
