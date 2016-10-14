@@ -122,7 +122,9 @@ class JukaiApp extends React.Component {
             let lst = [];
             if (data[0]) {
                 data.map(item=> {
+                    let text = '';
                     let words = item.map( word => {
+                        text += word.form + '\n';
                         word.metadata = entityTypes[word.cat];
                         if(word.ne.length) {
                             word.itemNe = entityTypes[word.ne[0]];
@@ -132,7 +134,10 @@ class JukaiApp extends React.Component {
                         return word;
                     });
                     let list = WordBuilder.build(words);
-                    lst.push(list);
+                    lst.push({
+                        list: list,
+                        text: text
+                    });
                 });
             }
             this.setState({chuck : lst});
@@ -166,18 +171,20 @@ class JukaiApp extends React.Component {
         return (
             <div>
                 <AppMenuBar />
-                <div className="col-sm-6">
-                    <AceEditor
-                        value={this.state.editorValue}
-                        mode="markdown"
-                        theme="github"
-                        onChange={this.onChange}
-                        name="UNIQUE_ID_OF_DIV"
-                        editorProps={{$blockScrolling: true}}
-                    />
-                </div>
-                <div className="col-sm-6">
-                    {renderLine}
+                <div className="row">
+                    <div className="col-sm-6">
+                        <AceEditor
+                            value={this.state.editorValue}
+                            mode="markdown"
+                            theme="github"
+                            onChange={this.onChange}
+                            name="UNIQUE_ID_OF_DIV"
+                            editorProps={{$blockScrolling: true}}
+                        />
+                    </div>
+                    <div className="col-sm-6">
+                        {renderLine}
+                    </div>
                 </div>
                 <div className="col-sm-12">
                     <div id="editor"></div>

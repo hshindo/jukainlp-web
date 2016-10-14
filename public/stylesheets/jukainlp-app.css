@@ -205,11 +205,22 @@ svg .background rect {
 	padding-right: 5px;
 }
 
-.item-translate {
+.padding-top-bottom {
 	padding-bottom: 10px;
+	paddint-top: 10px
 }
 
 .form {
  	padding: 0 5px;
 	margin-top: 3px;
+}
+.border-left {
+	border-left: solid 1px #b0b0b0;
+}
+
+.item-translate:nth-child(odd) {
+	background-color: #ffffff;
+}
+.item-translate:nth-child(even) {
+	background-color: #EEEEEE;
 }
