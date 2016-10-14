@@ -10,6 +10,10 @@ text {
   font-family: helvetica,arial,freesans,clean,sans-serif;
 }
 */
+html,body,div[data-reactroot]{
+  height: 100%;
+  overflow: hidden;
+}
 
 #svg {
   margin: 34px auto 100px;

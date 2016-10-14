@@ -223,12 +223,14 @@ svg .background rect {
 
 .ace-editor {
 	flex: 2 ;
-	overflow: auto;
+	overflow: hidden;
+	height: calc(100% - 64px) !important;
 }
 
 .ace-editor-wrapper {
 	display:flex;
-	flex-flow: column;
+	flex-flow: row;
+	height: 100%;
 }
 
 .item-translate:nth-child(odd) {
@@ -236,4 +238,22 @@ svg .background rect {
 }
 .item-translate:nth-child(even) {
 	background-color: #EEEEEE;
+}
+
+.line {
+	overflow: auto;
+}
+
+.item-count {
+	width: 50px;
+	padding-left: 10px;
+	padding-right: 10px;
+	float: left;
+}
+
+.text-result {
+	padding-left: 10px;
+	padding-right: 10px;
+	width: calc(100% - 70px);
+	float: left;
 }

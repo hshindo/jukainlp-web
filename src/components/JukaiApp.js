@@ -4,11 +4,8 @@ import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppMenuBar from './AppMenuBar';
-import Snackbar from 'material-ui/Snackbar';
-import StatusBar from './StatusBar';
 import LineText from './LineComponent';
 
-import brace from 'brace';
 import AceEditor from 'react-ace';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'brace/mode/markdown';
@@ -16,10 +13,6 @@ import 'brace/theme/github';
 
 injectTapEventPlugin();
 var ws = new WebSocket('ws://jukainlp.hshindo.com');
-ws.onmessage = function (msg) {
-    console.log(JSON.parse(msg.data));
-};
-
 
 class Chunk {
 
@@ -209,24 +202,24 @@ class JukaiApp extends React.Component {
         return (
             <div>
                 <AppMenuBar onCheckMenuAnal={this.onCheckMenuAnal} onCheckMenuTran={this.onCheckMenuTran} />
-                <div className="col-sm-6" style={{paddingLeft: 0}}>
-                    <div className="ace-editor-wrapper">
-                        <AceEditor
-                            width="100%"
-                            className="ace-editor"
-                            showPrintMargin={false}
-                            fontSize={18}
-                            value={this.state.editorValue}
-                            mode="markdown"
-                            theme="github"
-                            onChange={this.onChange}
-                            name="UNIQUE_ID_OF_DIV"
-                            editorProps={{$blockScrolling: true}}
-                        />
+                <div className="ace-editor-wrapper">
+                    <div className="col-sm-6" style={{paddingLeft: 0}}>
+                            <AceEditor
+                                width="100%"
+                                className="ace-editor"
+                                showPrintMargin={false}
+                                fontSize={18}
+                                value={this.state.editorValue}
+                                mode="markdown"
+                                theme="github"
+                                onChange={this.onChange}
+                                name="UNIQUE_ID_OF_DIV"
+                                editorProps={{$blockScrolling: true}}
+                            />
                     </div>
-                </div>
-                <div className="col-sm-6">
-                    {renderLine}
+                    <div className="col-sm-6 line">
+                        {renderLine}
+                    </div>
                 </div>
             </div>
         );

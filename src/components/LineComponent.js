@@ -31,10 +31,10 @@ export default class LineComponent extends React.Component {
         return (
             <div className="item-translate">
                 <div style={{alignItems: 'flex-end', display: 'flex'}}>
-                    <div className="col-xs-1 text-right padding-top-bottom">
+                    <div className="item-count text-right padding-top-bottom">
                         {this.props.index + 1}
                     </div>
-                    <div className="col-xs-11 border-left padding-top-bottom">
+                    <div className="border-left text-result padding-top-bottom">
                         <div className="line-word">
                             {renderWord}
                         </div>
@@ -43,24 +43,24 @@ export default class LineComponent extends React.Component {
                 <div className="clearfix"></div>
                 {(this.props.settingDisplay.en
                     ? <div>
-                        <div className="col-xs-1 text-right padding-top-bottom">EN</div>
-                        <div className="col-xs-11 border-left padding-top-bottom"> {this.props.text.text}</div>
+                        <div className="text-right item-count padding-top-bottom">EN</div>
+                        <div className="col-xs-10 text-result border-left padding-top-bottom"> {this.props.text.text}</div>
                         <div className="clearfix"></div>
                     </div>:''
                 )}
 
                 {(this.props.settingDisplay.ja
                         ? <div>
-                        <div className="col-xs-1 text-right padding-top-bottom">JP</div>
-                        <div className="col-xs-11 border-left padding-top-bottom">こんにちは。お世話になります</div>
+                        <div className="text-right item-count padding-top-bottom">JP</div>
+                        <div className="border-left text-result padding-top-bottom">こんにちは。お世話になります</div>
                         <div className="clearfix"></div>
                     </div>:''
                 )}
 
                 {(this.props.settingDisplay.cn
                         ? <div>
-                        <div className="col-xs-1 text-right padding-top-bottom">CN</div>
-                        <div className="col-xs-11 border-left padding-top-bottom">你好。最近你身体怎么样？</div>
+                        <div className="text-right item-count padding-top-bottom">CN</div>
+                        <div className="border-left text-result padding-top-bottom">你好。最近你身体怎么样？</div>
                         <div className="clearfix"></div>
                     </div>:''
                 )}
