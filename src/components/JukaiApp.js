@@ -39,6 +39,13 @@ class Chunk {
     }
 
     setWords(words) {
+        words.map(item => {
+            if(item.metadata) {
+                item.bgColor = WordBuilder.convertHex(item.metadata.bgColor, 20);
+                item.cacheBgColor = item.bgColor;
+            }
+            return item;
+        });
         this.words = words;
     }
 
@@ -84,8 +91,15 @@ class WordBuilder {
             }
             list.push(newItem.getTranslate());
         });
-
         return list;
+    }
+    static convertHex(hex,opacity){
+        hex = hex.replace('#','');
+        let r = parseInt(hex.substring(0,2), 16);
+        let g = parseInt(hex.substring(2,4), 16);
+        let b = parseInt(hex.substring(4,6), 16);
+
+        return 'rgba('+r+','+g+','+b+','+opacity/100+')';
     }
 }
 
@@ -95,6 +109,8 @@ class JukaiApp extends React.Component {
         let entityTypes = {};
         this.state = {chuck: [], editorValue: ''};
         this.onChange = this.onChange.bind(this);
+        this.onMose = this.onMose.bind(this);
+
         ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
 
@@ -103,19 +119,23 @@ class JukaiApp extends React.Component {
                     entityTypes[type.type] = type;
                 });
             }
+            let lst = [];
             if (data[0]) {
-                let words = data[0].map( word => {
-                    word.metadata = entityTypes[word.cat];
-                    if(word.ne.length) {
-                        word.itemNe = entityTypes[word.ne[0]];
-                    }else {
-                        word.itemNe = {};
-                    }
-                    return word;
+                data.map(item=> {
+                    let words = item.map( word => {
+                        word.metadata = entityTypes[word.cat];
+                        if(word.ne.length) {
+                            word.itemNe = entityTypes[word.ne[0]];
+                        }else {
+                            word.itemNe = {};
+                        }
+                        return word;
+                    });
+                    let list = WordBuilder.build(words);
+                    lst.push(list);
                 });
-                let list = WordBuilder.build(words);
-                this.setState({chuck : list});
             }
+            this.setState({chuck : lst});
         });
     }
     getChildContext() {
@@ -127,12 +147,22 @@ class JukaiApp extends React.Component {
         window.dispatchEvent(event);
     }
 
+    onMose (list,index) {
+        this.state.chuck[index] = list;
+        this.setState({chuck: this.state.chuck})
+    }
+
     onChange(newValue) {
         this.setState({editorValue: newValue});
         ws.send(newValue);
     }
 
     render() {
+        let renderLine = this.state.chuck.map((item,index) =>{
+           return (
+               <LineText key={index} index={index} onMose={this.onMose} text={item} enText={this.state.editorValue}/>
+           );
+        });
         return (
             <div>
                 <AppMenuBar />
@@ -147,7 +177,7 @@ class JukaiApp extends React.Component {
                     />
                 </div>
                 <div className="col-sm-6">
-                    <LineText text={this.state.chuck} enText={this.state.editorValue}/>
+                    {renderLine}
                 </div>
                 <div className="col-sm-12">
                     <div id="editor"></div>
