@@ -115,11 +115,13 @@ class JukaiApp extends React.Component {
             cn: true,
             pos: true,
             ne: true,
-            wiki: true
+            wikilink: true
         }};
         this.onChange = this.onChange.bind(this);
         this.onMose = this.onMose.bind(this);
         this.onCheckMenuTran = this.onCheckMenuTran.bind(this);
+        this.onCheckMenuAnal = this.onCheckMenuAnal.bind(this);
+
         ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
 
@@ -185,8 +187,17 @@ class JukaiApp extends React.Component {
         this.setState({settingDisplay : this.state.settingDisplay});
     }
 
-    onCheckMenuTran(item) {
-        
+    onCheckMenuAnal(item) {
+        if(item.type =='pos') {
+            this.state.settingDisplay.pos = item.checked;
+        }
+        if(item.type =='ne') {
+            this.state.settingDisplay.ne = item.checked;
+        }
+        if(item.type =='wikilink') {
+            this.state.settingDisplay.wikilink = item.checked;
+        }
+        this.setState({settingDisplay : this.state.settingDisplay});
     }
 
     render() {
