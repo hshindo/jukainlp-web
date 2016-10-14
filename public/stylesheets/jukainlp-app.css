@@ -217,6 +217,19 @@ svg .background rect {
 .border-left {
 	border-left: solid 1px #b0b0b0;
 }
+.item-translate {
+	font-size: 18px;
+}
+
+.ace-editor {
+	flex: 2 ;
+	overflow: auto;
+}
+
+.ace-editor-wrapper {
+	display:flex;
+	flex-flow: column;
+}
 
 .item-translate:nth-child(odd) {
 	background-color: #ffffff;

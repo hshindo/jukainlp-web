@@ -84,6 +84,8 @@ class WordBuilder {
             newItem.setLink(item.link[0]);
             if (item.link.length) {
                 newItem.setWords(raw.splice(raw.indexOf(item), item.link.length));
+            } else if (item.ne.length) {
+                newItem.setWords(raw.splice(raw.indexOf(item), item.ne.length));
             } else {
                 let lst = [];
                 lst.push(item);
@@ -171,9 +173,13 @@ class JukaiApp extends React.Component {
         return (
             <div>
                 <AppMenuBar />
-                <div className="row">
-                    <div className="col-sm-6">
+                <div className="col-sm-6" style={{paddingLeft: 0}}>
+                    <div className="ace-editor-wrapper">
                         <AceEditor
+                            width="100%"
+                            className="ace-editor"
+                            showPrintMargin={false}
+                            fontSize={18}
                             value={this.state.editorValue}
                             mode="markdown"
                             theme="github"
@@ -182,19 +188,10 @@ class JukaiApp extends React.Component {
                             editorProps={{$blockScrolling: true}}
                         />
                     </div>
-                    <div className="col-sm-6">
-                        {renderLine}
-                    </div>
                 </div>
-                <div className="col-sm-12">
-                    <div id="editor"></div>
-                    <div id="view-wrapper">
-                        <div id="view"></div>
+                <div className="col-sm-6">
+                    {renderLine}
                     </div>
-                </div>
-
-                <StatusBar />
-
                 <Snackbar
                     open={ this.props.isOpenSnackbar_LangAuto }
                     message="Language Mode: Auto"
