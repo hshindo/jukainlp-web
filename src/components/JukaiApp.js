@@ -109,10 +109,17 @@ class JukaiApp extends React.Component {
     constructor(props) {
         super(props);
         let entityTypes = {};
-        this.state = {chuck: [], editorValue: ''};
+        this.state = {chuck: [], editorValue: '', settingDisplay: {
+            en: true,
+            ja: true,
+            cn: true,
+            pos: true,
+            ne: true,
+            wiki: true
+        }};
         this.onChange = this.onChange.bind(this);
         this.onMose = this.onMose.bind(this);
-
+        this.onCheckMenuTran = this.onCheckMenuTran.bind(this);
         ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
 
@@ -164,15 +171,33 @@ class JukaiApp extends React.Component {
         ws.send(newValue);
     }
 
+    onCheckMenuTran(item) {
+
+        if(item.type =='tran_en') {
+            this.state.settingDisplay.en = item.checked;
+        }
+        if(item.type =='tran_ja') {
+            this.state.settingDisplay.ja = item.checked;
+        }
+        if(item.type =='tran_cn') {
+            this.state.settingDisplay.cn = item.checked;
+        }
+        this.setState({settingDisplay : this.state.settingDisplay});
+    }
+
+    onCheckMenuTran(item) {
+        
+    }
+
     render() {
         let renderLine = this.state.chuck.map((item,index) =>{
            return (
-               <LineText key={index} index={index} onMose={this.onMose} text={item} enText={this.state.editorValue}/>
+               <LineText settingDisplay={this.state.settingDisplay} key={index} index={index} onMose={this.onMose} text={item} enText={this.state.editorValue}/>
            );
         });
         return (
             <div>
-                <AppMenuBar />
+                <AppMenuBar onCheckMenuAnal={this.onCheckMenuAnal} onCheckMenuTran={this.onCheckMenuTran} />
                 <div className="col-sm-6" style={{paddingLeft: 0}}>
                     <div className="ace-editor-wrapper">
                         <AceEditor
@@ -191,124 +216,7 @@ class JukaiApp extends React.Component {
                 </div>
                 <div className="col-sm-6">
                     {renderLine}
-                    </div>
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_LangAuto }
-                    message="Language Mode: Auto"
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-lang-auto"
-                    value={ this.props.radioLangVal == "lang_auto" }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_LangEn }
-                    message="Language Mode: English"
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-lang-en"
-                    value={ this.props.radioLangVal == "lang_en" }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_LangJp }
-                    message="Language Mode: Japanese"
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-lang-jp"
-                    value={ this.props.radioLangVal == "lang_jp" }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_AnalPOS }
-                    message={ this.props.isChecked_POS == true ? "Analysis Mode: POS - ON" : "Analysis Mode: POS - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-anal-pos"
-                    value={ this.props.isChecked_POS }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_AnalNE }
-                    message={ this.props.isChecked_NE == true ? "Analysis Mode: NE - ON" : "Analysis Mode: NE - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-anal-ne"
-                    value={ this.props.isChecked_NE }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_AnalWiki }
-                    message={ this.props.isChecked_WikiLink == true ? "Analysis Mode: Wiki-Link - ON" : "Analysis Mode: Wiki-Link - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-anal-wiki"
-                    value={ this.props.isChecked_WikiLink }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_TransEn }
-                    message={ this.props.isChecked_TransEn == true ? "Translation Mode: English - ON" : "Translation Mode: English - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-trans-en"
-                    value={ this.props.isChecked_TransEn }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_TransJp }
-                    message={ this.props.isChecked_TransJp == true ? "Translation Mode: Japanese - ON" : "Translation Mode: Japanese - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-trans-jp"
-                    value={ this.props.isChecked_TransJp }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
-                <Snackbar
-                    open={ this.props.isOpenSnackbar_TransCn }
-                    message={ this.props.isChecked_TransCn == true ? "Translation Mode: Chinese - ON" : "Translation Mode: Chinese - OFF" }
-                    autoHideDuration={ 3000 }
-                    bodyStyle={{ textAlign: 'center' }}
-                />
-                <input
-                    type="text"
-                    id="state-trans-cn"
-                    value={ this.props.isChecked_TransCn }
-                    style={{ display: 'none' }}
-                    readOnly
-                />
+                </div>
             </div>
         );
     }

@@ -12,7 +12,7 @@ const styles = {
     },
 };
 
-class MenuAnalPart extends React.Component {
+class MenuBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -56,7 +56,7 @@ class MenuAnalPart extends React.Component {
                 {
                     text   : 'Japanese',
                     checked: true,
-                    type   : 'tran_jp'
+                    type   : 'tran_ja'
                 },
                 {
                     text   : 'Chinese',
@@ -65,8 +65,9 @@ class MenuAnalPart extends React.Component {
                 }
             ]
         }
+        this.onCheckMenuTran = this.onCheckMenuTran.bind(this);
     }
-
+    
     onCheckMenuAnal(item) {
         item.checked = !item.checked;
         this.state.menuAnal.map((menu)=> {
@@ -76,6 +77,8 @@ class MenuAnalPart extends React.Component {
             return item;
         });
         this.setState({menuAnal: this.state.menuAnal});
+        this.props.onMenuAnal(item);
+
     }
 
     onCheckMenuTran(item) {
@@ -87,6 +90,7 @@ class MenuAnalPart extends React.Component {
             return item;
         });
         this.setState({menuTrans: this.state.menuTrans});
+        this.props.onMenuTran(item);
     }
 
 
@@ -148,7 +152,7 @@ class MenuAnalPart extends React.Component {
                     <Subheader>Language</Subheader>
                 </MenuItem>
                 <div style={{paddingLeft: '15px'}}>
-                    <RadioButtonGroup name="shipSpeed" defaultSelected="not_light">
+                    <RadioButtonGroup name="shipSpeed" defaultSelected="lang_auto">
                         {renderMenuLang}
                     </RadioButtonGroup>
                 </div>
@@ -161,4 +165,4 @@ class MenuAnalPart extends React.Component {
     }
 }
 
-export default MenuAnalPart;
+export default MenuBar;

@@ -23,7 +23,6 @@ export default class LineComponent extends React.Component {
 
     render() {
         let list = this.props.text.list || [];
-
         let renderWord = list.map((item, index) => {
             return (
                 <Word onMose={this.onMose} key={index} index={index} word={item}/>
@@ -42,29 +41,29 @@ export default class LineComponent extends React.Component {
                     </div>
                 </div>
                 <div className="clearfix"></div>
-                <div className="col-xs-1 text-right padding-top-bottom">
-                    EN
-                </div>
-                <div className="col-xs-11 border-left padding-top-bottom">
-                    {this.props.text.text}
-                </div>
-                <div className="clearfix"></div>
+                {(this.props.settingDisplay.en
+                    ? <div>
+                        <div className="col-xs-1 text-right padding-top-bottom">EN</div>
+                        <div className="col-xs-11 border-left padding-top-bottom"> {this.props.text.text}</div>
+                        <div className="clearfix"></div>
+                    </div>:''
+                )}
 
-                <div className="col-xs-1 text-right padding-top-bottom">
-                    JP
-                </div>
-                <div className="col-xs-11 border-left padding-top-bottom">
-                    こんにちは。お世話になります。
-                </div>
-                <div className="clearfix"></div>
+                {(this.props.settingDisplay.ja
+                        ? <div>
+                        <div className="col-xs-1 text-right padding-top-bottom">JP</div>
+                        <div className="col-xs-11 border-left padding-top-bottom">こんにちは。お世話になります</div>
+                        <div className="clearfix"></div>
+                    </div>:''
+                )}
 
-                <div className="col-xs-1 text-right padding-top-bottom">
-                    CN
-                </div>
-                <div className="col-xs-11 border-left padding-top-bottom">
-                    你好。最近你身体怎么样？
-                </div>
-                <div className="clearfix"></div>
+                {(this.props.settingDisplay.cn
+                        ? <div>
+                        <div className="col-xs-1 text-right padding-top-bottom">CN</div>
+                        <div className="col-xs-11 border-left padding-top-bottom">你好。最近你身体怎么样？</div>
+                        <div className="clearfix"></div>
+                    </div>:''
+                )}
             </div>);
     }
 }
