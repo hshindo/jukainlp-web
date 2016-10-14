@@ -5,10 +5,11 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
+import { List, ListItem } from 'material-ui/List';
+import Checkbox from 'material-ui/Checkbox';
+import Drawer from 'material-ui/Drawer';
 
-import MenuLangPart from './MenuLangPart';
-import MenuAnalPart from './MenuAnalPart';
-import MenuTransPart from './MenuTransPart';
+import MenuBar from './MenuBar';
 
 const styles = {
     menuBar: {
@@ -22,34 +23,37 @@ const styles = {
 class AppMenuBar extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {open: false};
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.onMenuTran = this.onMenuTran.bind(this);
+        this.onMenuAnal = this.onMenuAnal.bind(this);
     }
+
+    onMenuTran(item) {
+        this.props.onCheckMenuTran(item);
+    }
+
+    onMenuAnal(item) {
+        this.props.onCheckMenuAnal(item);
+    }
+
+    handleToggle (){
+        this.setState({open: !this.state.open})
+    };
+
+    handleClose (){
+        this.setState({open: false});
+    }
+
 
     render() {
         return (
-            <AppBar
-                title="JukaiNLP"
-                iconElementLeft={
-                    <IconMenu
-                        iconButtonElement={
-                            <IconButton iconStyle={ styles.menuIcon }>
-                                <NavigationMenu />
-                            </IconButton>
-                        }
-                        anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-                        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-                    >
-                        <MenuLangPart />
-
-                        <Divider />
-
-                        <MenuAnalPart />
-
-                        <Divider />
-
-                        <MenuTransPart />
-                    </IconMenu>
-                }
-                iconElementRight={
+            <div>
+                <AppBar
+                    title="JukaiNLP"
+                    onLeftIconButtonTouchTap={this.handleToggle}
+                    iconElementRight={
                     <IconButton
                         iconClassName="muidocs-icon-custom-github"
                         tooltip="GitHubリンク"
@@ -58,8 +62,18 @@ class AppMenuBar extends React.Component {
                         target="_blank"
                     />
                 }
-                style={ styles.menuBar }
-            />
+                    style={ styles.menuBar }
+                />
+                <Drawer
+                    docked={false}
+                    width={200}
+                    open={this.state.open}
+                    onRequestChange={(open) => this.setState({open})}
+                >
+                    <MenuBar onMenuAnal={this.onMenuAnal} onMenuTran={this.onMenuTran}/>
+                </Drawer>
+            </div>
+
         );
     }
 }
