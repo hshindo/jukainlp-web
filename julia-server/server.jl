@@ -35,11 +35,13 @@ wsh = WebSocketHandler() do req, client
         msg = String(read(client))
         length(msg) > 1000 && continue
 
+        json = JSON.parse(msg)
+        text = json["text"]
         doc = Vector{Token}[]
         tokens = Token[]
         index = 1
-        for i = 1:length(msg)
-            c = msg[i]
+        for i = 1:length(text)
+            c = text[i]
             if c == ' '
                 index < i && push!(tokens, Token(index,i-1))
                 index = i + 1
@@ -50,7 +52,7 @@ wsh = WebSocketHandler() do req, client
                 index = i + 1
             end
         end
-        index <= length(msg) && push!(tokens, Token(index,length(msg)))
+        index <= length(text) && push!(tokens, Token(index,length(text)))
         length(tokens) > 0 && push!(doc, tokens)
 
         sentences, postags, entities = [], [], []
