@@ -15,10 +15,6 @@ function Token(i::Int, j::Int)
     Token(i, j, label)
 end
 
-function todict(t::Token)
-    Dict("i"=>t.i, "j"=>t.j, "label"=>t.label)
-end
-
 function readconf(path::String)
     lines = open(readlines, path)
     map(lines) do line
@@ -57,22 +53,33 @@ wsh = WebSocketHandler() do req, client
         index <= length(msg) && push!(tokens, Token(index,length(msg)))
         length(tokens) > 0 && push!(doc, tokens)
 
-        postags = map(s -> map(todict,s), doc)
-        entities = map(doc) do tokens
-            data = []
+        sentences, postags, entities = [], [], []
+        trans_ja, trans_en, trans_cn = [], [], []
+        for tokens in doc
+            push!(sentences, [tokens[1].i,tokens[end].j])
             for t in tokens
-                rem(t.i,3) == 0 || continue
-                id = Int(rem(t.i,length(entityconf))) + 1
-                label = entityconf[id][1]
-                push!(data, todict(Token(t.i,t.j,label)))
+                push!(postags, [t.i,t.j,t.label])
+                if rem(t.i,4) == 0
+                    id = Int(rem(t.i,length(entityconf))) + 1
+                    label = entityconf[id][1]
+                    push!(entities, [t.i,t.j,label])
+                end
             end
-            data
+            push!(trans_ja, "日本語の翻訳結果です。")
+            push!(trans_en, "This is an example of English translation.")
+            push!(trans_cn, "这是一个中国的翻译结果。")
         end
-        trans_ja = "日本語の翻訳結果です。"
-        trans_en = "This is an example of English translation."
-        trans_cn = "这是一个中国的翻译结果。"
 
-        res = JSON.json(Dict("pos"=>postags,"entity"=>entities,"trans-ja"=>trans_ja,"trans_en"=>trans_en,"trans_cn"=>trans_cn))
+        dict = Dict(
+            "sentence" => sentences,
+            "pos" => postags,
+            "entity" => entities,
+            "trans_ja" => trans_ja,
+            "trans_en" => trans_en,
+            "trans_cn" => trans_cn,
+        )
+        res = JSON.json(dict)
+        #println(res)
         write(client, res)
     end
 end
