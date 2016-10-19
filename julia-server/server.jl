@@ -25,8 +25,8 @@ end
 
 const filepath = dirname(@__FILE__)
 const clients = Dict()
-const posconf = readconf("pos.conf")
-const entityconf = readconf("entity.conf")
+const posconf = readconf("$(filepath)/pos.conf")
+const entityconf = readconf("$(filepath)/entity.conf")
 
 wsh = WebSocketHandler() do req, client
     println("Client: $(client.id) is connected.")
