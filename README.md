@@ -35,7 +35,7 @@ From client to server, send the json string as follows:
 }
 ```
 
-From server to client, the analyzer returns the json string as follows:
+From server to client, the server returns the json string as follows:
 ```javascript
 {
     "sentence": [
@@ -63,5 +63,6 @@ From server to client, the analyzer returns the json string as follows:
 }
 ```
 For `sentence`, the range `[1,13]` means that the first sentence starts at the first character `I` and ends at 13th character `.`.
-For `pos`, the range `[1,1,"NNP"]` means that the `NNP` should be labeled from the first character `I` to the first character `I`.
+Similarly, the second sentence begins at 15th character `H` and ends at 24th character `d`.  
+For `pos`, the range `[3,6,"VBP"]` means that the `VBP` label should be assigned from the third character `h` to the 6th character `e`.
 Note that the range index starts at 1.
