@@ -33,9 +33,14 @@ wsh = WebSocketHandler() do req, client
     while true
         #println("Request from $(client.id) recieved.")
         msg = String(read(client))
-        length(msg) > 1000 && continue
+        length(msg) > 2000 && continue
 
-        json = JSON.parse(msg)
+        json = try
+            JSON.parse(msg)
+        catch
+            return "Error: invalid format: $(msg)"
+        end
+        haskey(json, "text") || return "Error: no key: text."
         text = json["text"]
         doc = Vector{Token}[]
         tokens = Token[]
