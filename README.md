@@ -21,8 +21,8 @@ npm start
 ```
 then open your browser: `localhost:7777`.
 
-## Format
-From client to server,
+## JSON Format
+From client to server, send the json string as follows:
 ```javascript
 {
     "text": "I have a pen.\nHe is kind",
@@ -34,7 +34,8 @@ From client to server,
     "trans-cn": true,
 }
 ```
-From server to client,
+
+From server to client, the analyzer returns the json string as follows:
 ```javascript
 {
     "sentence": [
@@ -61,4 +62,6 @@ From server to client,
     ],
 }
 ```
+For `sentence`, the range `[1,13]` means that the first sentence starts at the first character `I` and ends at 13th character `.`.
+For `pos`, the range `[1,1,"NNP"]` means that the `NNP` should be labeled from the first character `I` to the first character `I`.
 Note that the range index starts at 1.
