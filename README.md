@@ -64,5 +64,5 @@ From server to client, the server returns the json string as follows:
 ```
 For `sentence`, the range `[1,13]` means that the first sentence starts at the first character `I` and ends at 13th character `.`.
 Similarly, the second sentence begins at 15th character `H` and ends at 24th character `d`.  
-For `pos`, the range `[3,6,"VBP"]` means that the `VBP` label should be assigned from the third character `h` to the 6th character `e`.
+For `pos`, the range `[3,6,"VBP"]` means that the `VBP` label should be assigned from the third character `h` to the 6th character `e`, i.e., the word `have`.
 Note that the range index starts at 1.
