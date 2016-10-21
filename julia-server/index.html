@@ -84,8 +84,9 @@ var webFontURLs = [
 $(function(){
     connection.onmessage = function(msg) {
         var doc = JSON.parse(msg.data);
-        //alert(doc["sentence"]);
-        
+        var str = JSON.stringify(doc);
+        document.getElementById("view").innerHTML = str;
+
         //if (conf === undefined) {
         //    conf = JSON.parse(msg.data);
         //    head.ready(function() {
