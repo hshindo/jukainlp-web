@@ -26,7 +26,7 @@ From client to server, send the json string as follows:
 ```javascript
 {
     "text": "I have a pen.\nHe is kind",
-    "lang": "en"
+    "lang": "en",
     "pos": true,
     "entity": true,
     "trans-ja": true,

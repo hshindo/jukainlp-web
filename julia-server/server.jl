@@ -28,19 +28,33 @@ const clients = Dict()
 const posconf = readconf("$(filepath)/pos.conf")
 const entityconf = readconf("$(filepath)/entity.conf")
 
+function create_error(msg::String)
+    dict = Dict(
+        "error": msg,
+    )
+    JSON.json(dict)
+end
+
 wsh = WebSocketHandler() do req, client
     println("Client: $(client.id) is connected.")
     while true
         #println("Request from $(client.id) recieved.")
         msg = String(read(client))
-        length(msg) > 2000 && continue
+        if length(msg) > 2000
+            write(client, create_error("Error: the mssage length exceeds 2000."))
+            continue
+        end
 
         json = try
             JSON.parse(msg)
         catch
-            return "Error: invalid format: $(msg)"
+            write(client, create_error("Error: invalid json format: $(msg)"))
+            continue
         end
-        haskey(json, "text") || return "Error: no key: text."
+        if !haskey(json, "text")
+            write(client, create_error("Error: key: text does not exist. Check the JSON format."))
+            continue
+        end
         text = json["text"]
         doc = Vector{Token}[]
         tokens = Token[]

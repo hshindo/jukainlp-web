@@ -40,12 +40,21 @@ editor.getSession().setUseWrapMode(true);
 editor.getSession().setTabSize(2);
 editor.focus();
 editor.getSession().on('change', function(e) {
-    var data = editor.getValue();
-    if (data.length == 0) {
-        dispatcher.post('requestRenderData', [{'text':""}]);
-        return;
-    }
-    connection.send(data);
+    var text = editor.getValue();
+    //if (data.length == 0) {
+    //    dispatcher.post('requestRenderData', [{'text':""}]);
+    //    return;
+    //}
+    var data = {
+        "text": text,
+        "lang": "en",
+        "pos": true,
+        "entity": true,
+        "trans-ja": true,
+        "trans-en": true,
+        "trans-cn": true,
+    };
+    connection.send(JSON.stringify(data));
 });
 var dispatcher;
 var conf;
@@ -74,14 +83,18 @@ var webFontURLs = [
 
 $(function(){
     connection.onmessage = function(msg) {
-        if (conf === undefined) {
-            conf = JSON.parse(msg.data);
-            head.ready(function() {
-                dispatcher = Util.embed('view', conf, {}, webFontURLs);
-            });
-        }
-        if (dispatcher === undefined) return;
+        var doc = JSON.parse(msg.data);
+        //alert(doc["sentence"]);
+        
+        //if (conf === undefined) {
+        //    conf = JSON.parse(msg.data);
+        //    head.ready(function() {
+        //        dispatcher = Util.embed('view', conf, {}, webFontURLs);
+        //    });
+        //}
+        //if (dispatcher === undefined) return;
 
+        /*
         var doc = JSON.parse(msg.data);
         var text = "";
         var entities = [];
@@ -113,6 +126,7 @@ $(function(){
         }
         var brat = { 'text': text, 'entities': entities };
         dispatcher.post('requestRenderData', [brat]);
+        */
     }
 });
 </script>
