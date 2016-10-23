@@ -57,49 +57,41 @@ wsh = WebSocketHandler() do req, client
         end
         text = json["text"]
         doc = Vector{Token}[]
-        tokens = Token[]
-        index = 1
-        for i = 1:length(text)
-            c = text[i]
-            if c == ' '
-                index < i && push!(tokens, Token(index,i-1))
-                index = i + 1
-            elseif c == '\n'
-                index < i && push!(tokens, Token(index,i-1))
-                length(tokens) > 0 && push!(doc, tokens)
-                tokens = Token[]
-                index = i + 1
+        sents = split(text, '\n', keep=false)
+        for sent in sents
+            tokens = Token[]
+            index = 1
+            for i = 1:length(sent)
+                c = sent[i]
+                if c == ' '
+                    index < i && push!(tokens, Token(index,i-1))
+                    index = i + 1
+                end
             end
+            index <= length(sent) && push!(tokens, Token(index,length(sent)))
+            length(tokens) > 0 && push!(doc, tokens)
         end
-        index <= length(text) && push!(tokens, Token(index,length(text)))
-        length(tokens) > 0 && push!(doc, tokens)
 
-        sentences, postags, entities = [], [], []
-        trans_ja, trans_en, trans_cn = [], [], []
-        for tokens in doc
-            push!(sentences, [tokens[1].i,tokens[end].j])
+        sentences = []
+        #trans_ja, trans_en, trans_cn = [], [], []
+        for i = 1:length(doc)
+            tokens = doc[i]
+            #str = "I have a pen."
+            annos = []
             for t in tokens
-                push!(postags, [t.i,t.j,t.label])
+                push!(annos, ["pos", t.i-1,t.j-1,t.label])
                 if rem(t.i,4) == 0
                     id = Int(rem(t.i,length(entityconf))) + 1
                     label = entityconf[id][1]
-                    push!(entities, [t.i,t.j,label])
+                    push!(annos, ["entity",t.i-1,t.j-1,label])
                 end
             end
-            push!(trans_ja, "日本語の翻訳結果です。")
-            push!(trans_en, "This is an example of English translation.")
-            push!(trans_cn, "这是一个中国的翻译结果。")
+            push!(sentences, Dict("text"=>sents[i], "anno"=>annos))
+            #push!(trans_ja, "日本語の翻訳結果です。")
+            #push!(trans_en, "This is an example of English translation.")
+            #push!(trans_cn, "这是一个中国的翻译结果。")
         end
-
-        dict = Dict(
-            "sentence" => sentences,
-            "pos" => postags,
-            "entity" => entities,
-            "trans_ja" => trans_ja,
-            "trans_en" => trans_en,
-            "trans_cn" => trans_cn,
-        )
-        res = JSON.json(dict)
+        res = JSON.json(sentences)
         #println(res)
         write(client, res)
     end
