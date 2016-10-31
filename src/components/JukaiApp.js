@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import Snackbar from 'material-ui/Snackbar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppMenuBar from './AppMenuBar';
@@ -13,85 +14,9 @@ import 'brace/theme/github';
 import ConfigBgColor from './../config/ConfigBgColor.js';
 
 injectTapEventPlugin();
-var ws       = new WebSocket('ws://jukainlp.hshindo.com');
-ws.onmessage = ((msg) => {
-    console.log(msg)
-});
-class Chunk {
 
-    constructor() {
-    }
-
-    setNe(ne) {
-        this.ne = ne;
-    }
-
-    setBgColorNe(bgColor) {
-        this.bgColor = bgColor;
-    }
-
-    setLink(link) {
-        this.link = link;
-    }
-
-    setWords(words) {
-        words.map(item => {
-            if (item.metadata) {
-                item.bgColor      = WordBuilder.convertHex(item.metadata.bgColor, 20);
-                item.cacheBgColor = item.bgColor;
-            }
-            return item;
-        });
-        this.words = words;
-    }
-
-    getTranslate(lang = Chunk.LANG_EN) {
-        if (lang == Chunk.LANG_EN) {
-            return {
-                ne     : this.ne,
-                link   : this.link,
-                words  : this.words,
-                bgColor: this.bgColor
-            }
-        }
-    }
-
-    static get LANG_EN() {
-        return 'en';
-    }
-
-    static get LANG_JA() {
-        return 'ja';
-    }
-
-    static get LANG_CN() {
-        return 'cn';
-    }
-}
 
 class WordBuilder {
-
-    static build(raw) {
-        var list = [];
-        raw.forEach(function (item) {
-            let newItem = new Chunk();
-            newItem.setBgColorNe(item.itemNe.bgColor);
-            newItem.setNe(item.ne[0]);
-            newItem.setLink(item.link[0]);
-            if (item.link.length) {
-                newItem.setWords(raw.splice(raw.indexOf(item), item.link.length));
-            } else if (item.ne.length) {
-                newItem.setWords(raw.splice(raw.indexOf(item), item.ne.length));
-            } else {
-                let lst = [];
-                lst.push(item);
-                newItem.setWords(lst);
-            }
-            list.push(newItem.getTranslate());
-        });
-        return list;
-    }
-
     static convertHex(hex, opacity) {
         hex   = hex.replace('#', '');
         let r = parseInt(hex.substring(0, 2), 16);
@@ -105,7 +30,6 @@ class WordBuilder {
 class JukaiApp extends React.Component {
     constructor(props) {
         super(props);
-        let entityTypes      = {};
         this.state           = {
             chuck: [], editorValue: '', settingDisplay: {
                 en      : true,
@@ -116,15 +40,17 @@ class JukaiApp extends React.Component {
                 wikilink: true
             }
         };
+        this.ws              = new WebSocket('ws://jukainlp.hshindo.com');
+        this.ws.onopen       = (() => {
+        });
         this.onChange        = this.onChange.bind(this);
         this.onMose          = this.onMose.bind(this);
         this.onCheckMenuTran = this.onCheckMenuTran.bind(this);
         this.onCheckMenuAnal = this.onCheckMenuAnal.bind(this);
 
-        ws.onmessage = ((msg) => {
+        this.ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
             let lst  = [];
-            console.log(data);
             data.map(function (sentence) {
                 let word = {
                     text : sentence.text,
@@ -135,10 +61,10 @@ class JukaiApp extends React.Component {
                         let itemWord = {
                             words: [
                                 {
-                                    form      : sentence.text.substring(item[1], item[2] + 1),
-                                    pos       : item[3],
-                                    bgColorPos: ConfigBgColor.getColor(item[3]),
-                                    bgColorForm: WordBuilder.convertHex(ConfigBgColor.getColor(item[3]), 20),
+                                    form            : sentence.text.substring(item[1], item[2] + 1),
+                                    pos             : item[3],
+                                    bgColorPos      : ConfigBgColor.getColor(item[3]),
+                                    bgColorForm     : WordBuilder.convertHex(ConfigBgColor.getColor(item[3]), 20),
                                     cacheBgColorForm: WordBuilder.convertHex(ConfigBgColor.getColor(item[3]), 20)
                                 }]
                         };
@@ -166,13 +92,12 @@ class JukaiApp extends React.Component {
     }
 
     onMose(list, index) {
-        this.state.chuck[index] = list;
         this.setState({chuck: this.state.chuck})
     }
 
     onChange(newValue) {
         this.setState({editorValue: newValue});
-        ws.send(JSON.stringify({
+        this.ws.send(JSON.stringify({
             "text"    : newValue,
             "lang"    : "en",
             "pos"     : true,
