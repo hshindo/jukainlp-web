@@ -1,7 +1,5 @@
 import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
-import Snackbar from 'material-ui/Snackbar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppMenuBar from './AppMenuBar';
@@ -23,7 +21,7 @@ class WordBuilder {
         let g = parseInt(hex.substring(2, 4), 16);
         let b = parseInt(hex.substring(4, 6), 16);
 
-        return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity / 100 + ')';
+        return `rgba(${r}, ${g}, ${b} , ${opacity / 100})`;
     }
 }
 
@@ -42,6 +40,10 @@ class JukaiApp extends React.Component {
         };
         this.ws              = new WebSocket('ws://jukainlp.hshindo.com');
         this.ws.onopen       = (() => {
+            toastr.options.timeOut = 1500;
+            toastr.options.closeButton = true;
+            toastr.options.positionClass ="toast-bottom-right";
+            toastr.success('Connected successfully');
         });
         this.onChange        = this.onChange.bind(this);
         this.onMose          = this.onMose.bind(this);
