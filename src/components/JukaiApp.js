@@ -124,7 +124,7 @@ class JukaiApp extends React.Component {
         ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
             let lst  = [];
-
+            console.log(data);
             data.map(function (sentence) {
                 let word = {
                     text : sentence.text,
