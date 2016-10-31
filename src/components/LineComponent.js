@@ -22,7 +22,7 @@ export default class LineComponent extends React.Component {
     }
 
     render() {
-        let list = this.props.text.list || [];
+        let list = this.props.text.items || [];
         let renderWord = list.map((item, index) => {
             return (
                 <Word onMose={this.onMose} settingDisplay={this.props.settingDisplay} key={index} index={index} word={item}/>

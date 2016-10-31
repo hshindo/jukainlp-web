@@ -1,18 +1,6 @@
 import React from 'react';
 
 
-const styles = {
-    link: {
-        border: '1px solid rgb(129, 140, 150)'
-    },
-    word: {
-        display  : 'inline',
-        float    : 'left',
-        textAlign: 'center',
-        padding  : '0 5px'
-    }
-};
-
 export default class LineComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -23,18 +11,18 @@ export default class LineComponent extends React.Component {
     }
 
     mouseOverCat(index) {
-        this.props.word.words[index].bgColor = this.props.word.words[index].color;
+        this.props.word.words[index].bgColorForm = this.props.word.words[index].bgColorPos;
         this.props.onMose(this.props.word, this.props.index);
     }
 
     mouseOutCat(index) {
-        this.props.word.words[index].bgColor = this.props.word.words[index].cacheBgColor;
+        this.props.word.words[index].bgColorForm = this.props.word.words[index].cacheBgColorForm;
         this.props.onMose(this.props.word, this.props.index);
     }
 
     mouseOverNe() {
         this.props.word.words.map(item => {
-            item.bgColor = this.props.word.bgColor;
+            item.bgColorForm = this.props.word.bgColor;
             return item;
         });
 
@@ -43,7 +31,7 @@ export default class LineComponent extends React.Component {
 
     mouseOutNe() {
         this.props.word.words.map(item => {
-            item.bgColor = item.cacheBgColor;
+            item.bgColorForm = item.cacheBgColorForm;
             return item;
         });
         this.props.onMose(this.props.word, this.props.index);
@@ -51,13 +39,6 @@ export default class LineComponent extends React.Component {
 
     render() {
         let renderForm = this.props.word.words.map((item, index) => {
-            let color = '';
-            if (item.metadata) {
-                color = item.metadata.bgColor;
-            } else {
-                color = '';
-            }
-            item.color       = color;
             let mouseOverCat = this.mouseOverCat.bind(this, index);
             let mouseOutCat  = this.mouseOutCat.bind(this, index);
             return (
@@ -65,12 +46,12 @@ export default class LineComponent extends React.Component {
                      className="item-cat">
                     {(this.props.settingDisplay.pos) ? <div onMouseOver={mouseOverCat}
                                                             onMouseOut={mouseOutCat}
-                                                            style={{backgroundColor: color}}
+                                                            style={{backgroundColor: item.bgColorPos}}
                                                             className="cat cursor-pointer">
-                        {item.cat}
+                        {item.pos}
                     </div>
                         : ''}
-                    <div className="form" style={{backgroundColor: item.bgColor}}>
+                    <div className="form" style={{backgroundColor: item.bgColorForm}}>
                         {item.form}
                     </div>
                 </div>
