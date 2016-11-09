@@ -3,33 +3,22 @@ import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 import AppMenuBar from './AppMenuBar';
-import LineText from './LineComponent';
 
 import AceEditor from 'react-ace';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import 'brace/mode/markdown';
 import 'brace/theme/github';
 import ConfigBgColor from './../config/ConfigBgColor.js';
+import View from 'react-nlp';
 
 injectTapEventPlugin();
 
-
-class WordBuilder {
-    static convertHex(hex, opacity) {
-        hex   = hex.replace('#', '');
-        let r = parseInt(hex.substring(0, 2), 16);
-        let g = parseInt(hex.substring(2, 4), 16);
-        let b = parseInt(hex.substring(4, 6), 16);
-
-        return `rgba(${r}, ${g}, ${b} , ${opacity / 100})`;
-    }
-}
 
 class JukaiApp extends React.Component {
     constructor(props) {
         super(props);
         this.state           = {
-            chuck: [], editorValue: '', settingDisplay: {
+            data: [], editorValue: '', settingDisplay: {
                 en      : true,
                 ja      : true,
                 cn      : true,
@@ -46,55 +35,17 @@ class JukaiApp extends React.Component {
             toastr.success('Connected successfully');
         });
         this.onChange        = this.onChange.bind(this);
-        this.onMose          = this.onMose.bind(this);
         this.onCheckMenuTran = this.onCheckMenuTran.bind(this);
         this.onCheckMenuAnal = this.onCheckMenuAnal.bind(this);
 
         this.ws.onmessage = ((msg) => {
             let data = JSON.parse(msg.data);
-            let lst  = [];
-            data.map(function (sentence) {
-                let word = {
-                    text : sentence.text,
-                    items: []
-                };
-                sentence.anno.map(item=> {
-                    if (item[0] != 'entity') {
-                        let itemWord = {
-                            words: [
-                                {
-                                    form            : sentence.text.substring(item[1], item[2] + 1),
-                                    pos             : item[3],
-                                    bgColorPos      : ConfigBgColor.getColor(item[3]),
-                                    bgColorForm     : WordBuilder.convertHex(ConfigBgColor.getColor(item[3]), 20),
-                                    cacheBgColorForm: WordBuilder.convertHex(ConfigBgColor.getColor(item[3]), 20)
-                                }]
-                        };
-                        word.items.push(itemWord);
-                    } else {
-                        word.items[word.items.length - 1].ne      = item[3];
-                        word.items[word.items.length - 1].bgColor = ConfigBgColor.getColor(item[3]);
-                    }
-
-                });
-                lst.push(word);
-            });
-            console.log(lst);
-            this.setState({chuck: lst});
+            this.setState({data: data});
         });
     }
 
     getChildContext() {
         return {muiTheme: getMuiTheme(baseTheme)};
-    }
-
-    componentDidMount() {
-        event = new CustomEvent("resize");
-        window.dispatchEvent(event);
-    }
-
-    onMose(list, index) {
-        this.setState({chuck: this.state.chuck})
     }
 
     onChange(newValue) {
@@ -138,12 +89,6 @@ class JukaiApp extends React.Component {
     }
 
     render() {
-        let renderLine = this.state.chuck.map((item, index) => {
-            return (
-                <LineText settingDisplay={this.state.settingDisplay} key={index} index={index} onMose={this.onMose}
-                          text={item} enText={this.state.editorValue}/>
-            );
-        });
         return (
             <div>
                 <AppMenuBar onCheckMenuAnal={this.onCheckMenuAnal} onCheckMenuTran={this.onCheckMenuTran}/>
@@ -163,7 +108,14 @@ class JukaiApp extends React.Component {
                         />
                     </div>
                     <div className="col-sm-6 line">
-                        {renderLine}
+                        <View data={this.state.data} settingDisplay={{
+                            en  : true,
+                            ja  : true,
+                            cn  : true,
+                            pos : true,
+                            ne  : true,
+                            wiki: true
+                        }}/>
                     </div>
                 </div>
             </div>
