@@ -1,12 +1,6 @@
 import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import Divider from 'material-ui/Divider';
-import NavigationMenu from 'material-ui/svg-icons/navigation/menu';
-import { List, ListItem } from 'material-ui/List';
-import Checkbox from 'material-ui/Checkbox';
 import Drawer from 'material-ui/Drawer';
 
 import MenuBar from './MenuBar';

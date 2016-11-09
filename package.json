@@ -19,10 +19,12 @@
     "react": "^15.3.1",
     "react-ace": "^3.6.1",
     "react-dom": "^15.3.1",
+    "react-nlp": "git+https://github.com/sphinx-software/react-nlp.git",
     "react-redux": "^4.4.5",
     "react-tap-event-plugin": "^1.0.0",
     "redux": "^3.6.0",
-    "socket.io-client": "^1.5.0"
+    "socket.io-client": "^1.5.0",
+    "toastr": "^2.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
